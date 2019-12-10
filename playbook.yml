@@ -40,4 +40,9 @@
     lineinfile:
       name: /tmp/_abh
       line: 'Ending.. {{ dateTime.stdout_lines }} '
+
+  - name: adding port to firewall and reload
+    command: 'firewall-cmd --permanent --zone=public --add-port=3306/tcp'
+    command: 'firewall-cmd --reload'
+
   become: true
