@@ -1,0 +1,43 @@
+---
+- hosts: all
+  tasks:
+  - name: ping sanity checks
+    ping:
+    register: pong
+
+  - name: removing old file in /tmp/_abh
+    shell: "> /tmp/_abh"
+    shell: "date"
+    register: dateTime
+
+  - name: starting log
+    lineinfile:
+      name: /tmp/_abh
+      line: 'starting.. {{ dateTime.stdout_lines }} '
+
+  - name: install firewall
+    yum:
+      name: firewalld
+      state: present
+
+  - name: starting the firewall service
+    service:
+      name: firewalld
+      state: started
+      use: service
+
+  - name: adding mariadb to service
+    service:
+      name: mariadb
+      state: started
+      use: service
+
+  - name: get end date
+    shell: "date"
+    register: dateTime
+
+  - name: Ending log
+    lineinfile:
+      name: /tmp/_abh
+      line: 'Ending.. {{ dateTime.stdout_lines }} '
+  become: true
